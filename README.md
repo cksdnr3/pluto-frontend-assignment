@@ -1,5 +1,9 @@
 # Pluto Frontend Assignment
 
+## Deployment
+
+https://main.d3o4fblwjoxacx.amplifyapp.com/
+
 ## Install & Run
 
 ```shell

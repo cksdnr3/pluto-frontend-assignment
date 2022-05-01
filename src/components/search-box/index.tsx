@@ -24,13 +24,13 @@ function SearchBox({ event, input, query, state }: Props) {
             selected={item.objectID === state.selectedPost?.objectID}
             onMouseEnter={() => event.onMouseEnterPost(index)}
             onClick={() => event.onClickPost(item)}
-            onKeyDown={event.onKeyDown}
           >
             {highlightMatched(item.title, input.search.value, {
               fontWeight: 700,
               backgroundColor: "transparent",
               color: "black",
             })}
+            <HiddenInput onKeyDown={event.onKeyDown} />
           </Item>
         )}
       />
@@ -49,8 +49,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const Item = styled.button<{ selected: boolean }>`
-  position: relative;
+const Item = styled.label<{ selected: boolean }>`
   display: block;
   padding: 0.8rem 1.6rem;
   border-radius: 6px;
@@ -77,6 +76,13 @@ const Item = styled.button<{ selected: boolean }>`
     background-color: rgb(100, 149, 237, 0.7);
     color: #fff;
   }
+`;
+
+const HiddenInput = styled.input`
+  position: absolute;
+  top: 0;
+  padding: 0;
+  width: 0;
 `;
 
 export default SearchBox;

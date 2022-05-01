@@ -1,18 +1,20 @@
 import React from "react";
 import styled from "styled-components";
 import { IPost } from "../../types/post";
+import Loading from "../loading";
 
 interface Props {
   data?: IPost;
   isLoading?: boolean;
 }
 
-function InformationBox({ data }: Props) {
+function InformationBox({ data, isLoading }: Props) {
   return (
     <Wrapper>
+      {isLoading && <Loading />}
       {data && (
         <>
-          <Title href={data.url}>{data?.title}</Title>
+          <Title href={data?.url}>{data?.title}</Title>
           <Author>{data?.author}</Author>
           <Points>👍 {data?.points}</Points>
           <Comments>
