@@ -2,7 +2,7 @@
 
 ## Deployment
 
-https://main.d3o4fblwjoxacx.amplifyapp.com/
+https://search-box-app.netlify.app/
 
 ## Install & Run
 
