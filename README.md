@@ -1,46 +1,58 @@
-# Getting Started with Create React App
+# Pluto Frontend Assignment
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## HackerNews auto complete search box (combobox)
 
-## Available Scripts
+### Background
 
-In the project directory, you can run:
+[Hacker News](https://news.ycombinator.com/) has massive posts and the posts are updated so often it's pain to find something I'm interested in.  
+So, we will make a search box that autocompletes the search text lie below.
 
-### `npm start`
+[Example]  
+![Example Screenshot](/public/example_screenshot_1.png)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Requirements
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+1. A user can type a search text in InputBox.
+2. A user can find "title matching" posts.
+3. A user can select a post.
+4. When a user selects the post, you should display the below information.
 
-### `npm test`
+- title (with link to the original article)
+- author
+- points
+- 1st depth comments (content only)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Non-goal
 
-### `npm run build`
+1. It doesn't matter which library or framework you use. Feel free to use tools.
+2. Design (UI) is not a part of the evaluation. However, it should behave as the user expects.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Resources
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+You can use Items & Search API from [Algolia](https://www.algolia.com/).
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```
+GET https://hn.algolia.com/api/v1/items/:id
+GET https://hn.algolia.com/api/v1/search?query=...
+```
 
-### `npm run eject`
+[Full API Document](https://hn.algolia.com/api)
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Bonus
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. If making a request for every typing, it may overload the API server or hit the [rate limit]. So, if you can "postpone" requests until a user ends the typing, it's good for both a user and the server.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+2. Keyboard interaction (change select with ARROW keys, and submit a query with ENTER key) will be a bonus point.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Due date
 
-## Learn More
+in a week
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Submission
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Make an online repository(Github, BitBucket, etc.) and submit the address via Email.
+
+### Q&A
+
+contact us via email.
+<recruit@pluto.im>
