@@ -12,3 +12,14 @@ cd pluto-frontend-assignment
 npm install
 npm start
 ```
+
+## Language
+
+ES6 (with typescript)
+
+## Library
+
+- React (with CRA)
+- Styled-Components
+- React-Query
+- Axios
