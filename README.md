@@ -24,6 +24,28 @@ ES6 (with typescript)
 - React-Query
 - Axios
 
+## Routes
+
+- Home(search) = "/"
+
+## Directory
+
+src  
+├── App.tsx  
+├── components  
+│   ├── information-box  
+│   ├── input  
+│   ├── list  
+│   ├── loading  
+│   ├── search  
+│   └── search-box  
+├── constants  
+├── hooks  
+├── index.tsx  
+├── styles  
+├── types  
+└── utils
+
 ## Requirements
 
 - [x] 1. A user can type a search text in InputBox.
