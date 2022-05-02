@@ -1,4 +1,4 @@
-# Pluto Frontend Assignment
+# Search-box-app
 
 ## Deployment
 
@@ -8,7 +8,7 @@ https://search-box-app.netlify.app/
 
 ```shell
 git clone https://github.com/cksdnr3/pluto-frontend-assignment.git
-cd pluto-frontend-assignment
+cd search-box-app
 npm install
 npm start
 ```
