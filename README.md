@@ -30,21 +30,20 @@ ES6 (with typescript)
 
 ## Directory
 
-src  
-├── App.tsx  
-├── components  
-│   ├── information-box  
-│   ├── input  
-│   ├── list  
-│   ├── loading  
-│   ├── search  
-│   └── search-box  
-├── constants  
-├── hooks  
-├── index.tsx  
-├── styles  
-├── types  
-└── utils
+- src
+  - App.tsx
+  - components
+    - information-box
+    - input
+    - list
+    - loading
+    - search
+    - search-box
+  - constants
+  - hooks
+  - styles
+  - types
+  - utils
 
 ## Requirements
 
