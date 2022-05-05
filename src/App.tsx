@@ -6,7 +6,7 @@ import { useSearch } from "./hooks/useSearch";
 function App() {
   return (
     <Wrapper>
-      <Search {...useSearch()} />
+      <Search />
     </Wrapper>
   );
 }

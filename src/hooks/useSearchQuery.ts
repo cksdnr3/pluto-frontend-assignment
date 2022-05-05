@@ -18,8 +18,8 @@ export const useSearchQuery = (
     fetcher,
     {
       ...options,
-      enabled: !!params.query.length,
-      keepPreviousData: !!params.query.length,
+      enabled: !!params.query?.length,
+      keepPreviousData: !!params.query?.length,
     }
   );
 };

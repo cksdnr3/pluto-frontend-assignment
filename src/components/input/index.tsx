@@ -1,17 +1,20 @@
-import React, { forwardRef, HTMLAttributes } from "react";
+import React, { HTMLAttributes } from "react";
 import styled from "styled-components";
+import { useDebounce } from "../../hooks/useDebounce";
+import { useInput } from "../../hooks/useInput";
+import { useSearchQuery } from "../../hooks/useSearchQuery";
 
 interface Props extends HTMLAttributes<HTMLInputElement> {
   value: string;
 }
 
-const Input = forwardRef<HTMLDivElement, Props>((props, ref) => {
+function Input(props: Props) {
   return (
-    <Wrapper ref={ref}>
+    <Wrapper>
       <TextInput {...props} />
     </Wrapper>
   );
-});
+}
 
 const Wrapper = styled.div`
   border-radius: 4px;

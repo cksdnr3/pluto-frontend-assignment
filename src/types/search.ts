@@ -1,5 +1,5 @@
 export interface ISearchParams {
-  query: string;
+  query?: string;
   hitsPerPage?: number;
   page?: number;
   tags?: TTags;

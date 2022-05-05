@@ -1,19 +1,23 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 import { useSearch } from "../../hooks/useSearch";
+import { ISearch } from "../../types/search";
 import InformationBox from "../information-box";
 import SearchBox from "../search-box";
 
-type Props = ReturnType<typeof useSearch>;
+// type Props = ReturnType<typeof useSearch>;
 
-function Search(props: Props) {
+function Search() {
+  const [selectedPostId, setSelectedPostId] = useState<number | undefined>();
+
+  const selectPost = useCallback((id: number | undefined) => {
+    setSelectedPostId(id);
+  }, []);
+
   return (
     <Wrapper>
-      <SearchBox {...props} />
-      <InformationBox
-        data={props.query.post.data?.data}
-        isLoading={props.query.post.isLoading}
-      />
+      <SearchBox selectPost={selectPost} selectedPostId={selectedPostId} />
+      <InformationBox id={selectedPostId} />
     </Wrapper>
   );
 }

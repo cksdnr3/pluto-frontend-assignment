@@ -1,9 +1,9 @@
-import React, { HTMLAttributes } from "react";
+import React, { HTMLAttributes, ReactElement } from "react";
 import styled from "styled-components";
 
 interface Props<T> extends HTMLAttributes<HTMLDivElement> {
   items: T[];
-  render: (item: T, index: number) => React.ReactElement;
+  render: (item: T, index: number) => ReactElement;
 }
 
 function List<T>(props: Props<T>) {

@@ -1,36 +1,104 @@
-import React from "react";
+import axios from "axios";
+import React, { KeyboardEvent, useCallback, useState } from "react";
+import { QueryFunctionContext, useQueryClient } from "react-query";
 import styled from "styled-components";
+import { SERVER } from "../../constants/routes";
+import { useDebounce } from "../../hooks/useDebounce";
+import { useInput } from "../../hooks/useInput";
 import { useSearch } from "../../hooks/useSearch";
+import { useSearchQuery } from "../../hooks/useSearchQuery";
+import { ISearch } from "../../types/search";
 import { highlightMatched } from "../../utils/highlightMathced";
 import InputBox from "../input";
 import Autocompletes from "../list";
 
-type Props = ReturnType<typeof useSearch>;
+interface Props {
+  selectPost: (id: string) => void;
+  selectedPostId?: string;
+}
 
-function SearchBox({ event, input, query, state }: Props) {
+function SearchBox({ selectPost, selectedPostId }: Props) {
+  const queryClient = useQueryClient();
+
+  const [pIndex, setPIndex] = useState<number>(0);
+
+  const searchInput = useInput();
+  const debouncedSearch = useDebounce(searchInput.value, 100);
+
+  const { data } = useSearchQuery(
+    {
+      query: debouncedSearch,
+      hitsPerPage: 10,
+      restrictSearchableAttributes: "title",
+    },
+    {
+      onSuccess: (data) => {
+        setPIndex(0);
+        selectPost(undefined);
+        // data.data.hits.forEach((search) => {
+        //   queryClient.prefetchQuery(
+        //     ["items", search.objectID],
+        // ({ queryKey }: QueryFunctionContext) => {
+        //   const [key, id] = queryKey;
+        //   return axios.get(`${SERVER}/${key}/${id}`);
+        // }
+        //   );
+        // });
+      },
+    }
+  );
+
+  const onKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (!data) return;
+
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        e.preventDefault();
+        setPIndex((prev) => Math.abs(++prev % data.data.hits.length));
+      }
+
+      // if (e.key === "ArrowUp") {
+      //   e.preventDefault();
+      //   setPIndex((prev) =>
+      //     --prev < 0 ? searchQuery.data.data.hits.length + prev : prev
+      //   );
+      // }
+
+      if (e.key === "Enter") {
+        e.preventDefault();
+        selectPost(data.data.hits[pIndex].objectID);
+      }
+    },
+    [data?.data.hits, pIndex]
+  );
+
+  const onMouseEnterPost = useCallback((index: number) => {
+    setPIndex(index);
+  }, []);
+
   return (
     <Wrapper>
       <InputBox
         placeholder="Search Post"
-        onKeyDown={event.onKeyDown}
-        {...input.search}
+        onKeyDown={onKeyDown}
+        {...searchInput}
       />
       <Autocompletes
-        items={query.search.data?.data.hits || []}
+        items={data?.data.hits || []}
         render={(item, index) => (
           <Item
             key={item.objectID}
-            aria-selected={state.pIndex === index}
-            selected={item.objectID === state.selectedPost?.objectID}
-            onMouseEnter={() => event.onMouseEnterPost(index)}
-            onClick={() => event.onClickPost(item)}
+            aria-selected={pIndex === index}
+            selected={item.objectID === selectedPostId}
+            onMouseEnter={() => onMouseEnterPost(index)}
+            onClick={() => selectPost(item.objectID)}
           >
-            {highlightMatched(item.title, input.search.value, {
+            {highlightMatched(item.title, searchInput.value, {
               fontWeight: 700,
               backgroundColor: "transparent",
               color: "black",
             })}
-            <HiddenInput onKeyDown={event.onKeyDown} />
+            <HiddenInput onKeyDown={onKeyDown} />
           </Item>
         )}
       />

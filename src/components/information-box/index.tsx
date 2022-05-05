@@ -1,25 +1,59 @@
+import axios, { AxiosResponse } from "axios";
 import React from "react";
+import { QueryFunctionContext, useQueries, useQuery } from "react-query";
 import styled from "styled-components";
+import { apiKeys } from "../../constants/apiKeys";
+import { SERVER } from "../../constants/routes";
 import { IPost } from "../../types/post";
+import { ISearch } from "../../types/search";
 import Loading from "../loading";
 
 interface Props {
-  data?: IPost;
-  isLoading?: boolean;
+  id?: number;
 }
 
-function InformationBox({ data, isLoading }: Props) {
+const fetcher = async ({ queryKey }: QueryFunctionContext) => {
+  const [key, id] = queryKey;
+  return (await axios.get(`${SERVER}/${key}/${id}`)).data;
+};
+
+function InformationBox({ id }: Props) {
+  console.log(typeof id);
+  useQueries([
+    {
+      queryKey: [apiKeys.items, id && id - 1],
+      queryFn: fetcher,
+      enabled: typeof id === "number",
+    },
+    {
+      queryKey: [apiKeys.items, id],
+      queryFn: fetcher,
+      enabled: typeof id === "number",
+    },
+    {
+      queryKey: [apiKeys.items, id && id + 1],
+      queryFn: fetcher,
+      enabled: typeof id === "number",
+    },
+  ]);
+
+  const { data, isLoading } = useQuery<AxiosResponse<IPost>>(
+    [apiKeys.items, id],
+    fetcher,
+    { enabled: typeof id === "number" }
+  );
+
   return (
     <Wrapper>
       {isLoading && <Loading />}
       {data && (
         <>
-          <Title href={data?.url}>{data?.title}</Title>
-          <Author>{data?.author}</Author>
-          <Points>👍 {data?.points}</Points>
+          <Title href={data.data.url}>{data.data.title}</Title>
+          <Author>{data.data.author}</Author>
+          <Points>👍 {data.data.points}</Points>
           <Comments>
-            Comments. {data?.children.length}
-            {data?.children.map((comment, index) => (
+            Comments. {data.data.children.length}
+            {data.data.children.map((comment, index) => (
               <Comment
                 key={index}
                 dangerouslySetInnerHTML={{ __html: comment.text }}
