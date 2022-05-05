@@ -4,22 +4,18 @@ import { apiKeys } from "../constants/apiKeys";
 import { SERVER } from "../constants/routes";
 import { ISearch, ISearchParams } from "../types/search";
 
-const fetcher = ({ queryKey }: QueryFunctionContext) => {
+const fetcher = async ({ queryKey }: QueryFunctionContext) => {
   const [key, params] = queryKey;
-  return axios.get(`${SERVER}/${key}`, { params });
+  return (await axios.get(`${SERVER}/${key}`, { params })).data;
 };
 
 export const useSearchQuery = (
   params: ISearchParams,
-  options?: UseQueryOptions<AxiosResponse<{ hits: ISearch[] }>>
+  options?: UseQueryOptions<{ hits: ISearch[] }>
 ) => {
-  return useQuery<AxiosResponse<{ hits: ISearch[] }>>(
-    [apiKeys.search, params],
-    fetcher,
-    {
-      ...options,
-      enabled: !!params.query?.length,
-      keepPreviousData: !!params.query?.length,
-    }
-  );
+  return useQuery<{ hits: ISearch[] }>([apiKeys.search, params], fetcher, {
+    ...options,
+    enabled: !!params.query?.length,
+    keepPreviousData: !!params.query?.length,
+  });
 };

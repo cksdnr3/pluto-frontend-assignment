@@ -1,13 +1,8 @@
-import axios from "axios";
-import React, { KeyboardEvent, useCallback, useState } from "react";
-import { QueryFunctionContext, useQueryClient } from "react-query";
+import React, { KeyboardEvent, useCallback, useRef, useState } from "react";
 import styled from "styled-components";
-import { SERVER } from "../../constants/routes";
 import { useDebounce } from "../../hooks/useDebounce";
 import { useInput } from "../../hooks/useInput";
-import { useSearch } from "../../hooks/useSearch";
 import { useSearchQuery } from "../../hooks/useSearchQuery";
-import { ISearch } from "../../types/search";
 import { highlightMatched } from "../../utils/highlightMathced";
 import InputBox from "../input";
 import Autocompletes from "../list";
@@ -17,9 +12,7 @@ interface Props {
   selectedPostId?: string;
 }
 
-function SearchBox({ selectPost, selectedPostId }: Props) {
-  const queryClient = useQueryClient();
-
+function SearchBox({ selectPost }: Props) {
   const [pIndex, setPIndex] = useState<number>(0);
 
   const searchInput = useInput();
@@ -32,18 +25,9 @@ function SearchBox({ selectPost, selectedPostId }: Props) {
       restrictSearchableAttributes: "title",
     },
     {
-      onSuccess: (data) => {
+      onSuccess: () => {
         setPIndex(0);
-        selectPost(undefined);
-        // data.data.hits.forEach((search) => {
-        //   queryClient.prefetchQuery(
-        //     ["items", search.objectID],
-        // ({ queryKey }: QueryFunctionContext) => {
-        //   const [key, id] = queryKey;
-        //   return axios.get(`${SERVER}/${key}/${id}`);
-        // }
-        //   );
-        // });
+        selectPost("");
       },
     }
   );
@@ -52,24 +36,22 @@ function SearchBox({ selectPost, selectedPostId }: Props) {
     (e: KeyboardEvent) => {
       if (!data) return;
 
-      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      if (e.key === "ArrowDown") {
         e.preventDefault();
-        setPIndex((prev) => Math.abs(++prev % data.data.hits.length));
+        setPIndex((prev) => Math.abs(++prev % data.hits.length));
       }
 
-      // if (e.key === "ArrowUp") {
-      //   e.preventDefault();
-      //   setPIndex((prev) =>
-      //     --prev < 0 ? searchQuery.data.data.hits.length + prev : prev
-      //   );
-      // }
+      if (e.key === "ArrowUp") {
+        e.preventDefault();
+        setPIndex((prev) => (--prev < 0 ? data.hits.length + prev : prev));
+      }
 
       if (e.key === "Enter") {
         e.preventDefault();
-        selectPost(data.data.hits[pIndex].objectID);
+        selectPost(data.hits[pIndex].objectID);
       }
     },
-    [data?.data.hits, pIndex]
+    [data?.hits, pIndex]
   );
 
   const onMouseEnterPost = useCallback((index: number) => {
@@ -84,12 +66,11 @@ function SearchBox({ selectPost, selectedPostId }: Props) {
         {...searchInput}
       />
       <Autocompletes
-        items={data?.data.hits || []}
+        items={data?.hits || []}
         render={(item, index) => (
           <Item
             key={item.objectID}
-            aria-selected={pIndex === index}
-            selected={item.objectID === selectedPostId}
+            selected={pIndex === index}
             onMouseEnter={() => onMouseEnterPost(index)}
             onClick={() => selectPost(item.objectID)}
           >
@@ -98,7 +79,7 @@ function SearchBox({ selectPost, selectedPostId }: Props) {
               backgroundColor: "transparent",
               color: "black",
             })}
-            <HiddenInput onKeyDown={onKeyDown} />
+            <HiddenInput id={`${index}`} onKeyDown={onKeyDown} />
           </Item>
         )}
       />
@@ -144,6 +125,10 @@ const Item = styled.label<{ selected: boolean }>`
     background-color: rgb(100, 149, 237, 0.7);
     color: #fff;
   }
+  &:hover {
+    background-color: rgb(100, 149, 237, 0.7);
+    color: #fff;
+  }
 `;
 
 const HiddenInput = styled.input`
@@ -153,4 +138,4 @@ const HiddenInput = styled.input`
   width: 0;
 `;
 
-export default SearchBox;
+export default React.memo(SearchBox);

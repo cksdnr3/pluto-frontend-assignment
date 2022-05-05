@@ -9,6 +9,7 @@ interface Props extends HTMLAttributes<HTMLInputElement> {
 }
 
 function Input(props: Props) {
+  console.log("input render");
   return (
     <Wrapper>
       <TextInput {...props} />

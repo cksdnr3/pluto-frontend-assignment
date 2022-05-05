@@ -9,7 +9,7 @@ import { ISearch } from "../../types/search";
 import Loading from "../loading";
 
 interface Props {
-  id?: number;
+  id?: string;
 }
 
 const fetcher = async ({ queryKey }: QueryFunctionContext) => {
@@ -18,42 +18,21 @@ const fetcher = async ({ queryKey }: QueryFunctionContext) => {
 };
 
 function InformationBox({ id }: Props) {
-  console.log(typeof id);
-  useQueries([
-    {
-      queryKey: [apiKeys.items, id && id - 1],
-      queryFn: fetcher,
-      enabled: typeof id === "number",
-    },
-    {
-      queryKey: [apiKeys.items, id],
-      queryFn: fetcher,
-      enabled: typeof id === "number",
-    },
-    {
-      queryKey: [apiKeys.items, id && id + 1],
-      queryFn: fetcher,
-      enabled: typeof id === "number",
-    },
-  ]);
-
-  const { data, isLoading } = useQuery<AxiosResponse<IPost>>(
-    [apiKeys.items, id],
-    fetcher,
-    { enabled: typeof id === "number" }
-  );
+  const { data, isLoading } = useQuery<IPost>([apiKeys.items, id], fetcher, {
+    enabled: !!id?.length,
+  });
 
   return (
     <Wrapper>
       {isLoading && <Loading />}
       {data && (
         <>
-          <Title href={data.data.url}>{data.data.title}</Title>
-          <Author>{data.data.author}</Author>
-          <Points>👍 {data.data.points}</Points>
+          <Title href={data.url}>{data.title}</Title>
+          <Author>{data.author}</Author>
+          <Points>👍 {data.points}</Points>
           <Comments>
-            Comments. {data.data.children.length}
-            {data.data.children.map((comment, index) => (
+            Comments. {data.children.length}
+            {data.children.map((comment, index) => (
               <Comment
                 key={index}
                 dangerouslySetInnerHTML={{ __html: comment.text }}

@@ -8,15 +8,15 @@ import SearchBox from "../search-box";
 // type Props = ReturnType<typeof useSearch>;
 
 function Search() {
-  const [selectedPostId, setSelectedPostId] = useState<number | undefined>();
+  const [selectedPostId, setSelectedPostId] = useState<string>();
 
-  const selectPost = useCallback((id: number | undefined) => {
+  const selectPost = useCallback((id: string) => {
     setSelectedPostId(id);
   }, []);
 
   return (
     <Wrapper>
-      <SearchBox selectPost={selectPost} selectedPostId={selectedPostId} />
+      <SearchBox selectPost={selectPost} />
       <InformationBox id={selectedPostId} />
     </Wrapper>
   );
