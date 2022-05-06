@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import Search from "./components/search";
-import { useSearch } from "./hooks/useSearch";
 
 function App() {
   return (

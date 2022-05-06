@@ -9,7 +9,7 @@ import { ISearch } from "../../types/search";
 import Loading from "../loading";
 
 interface Props {
-  id?: string;
+  selectedPostId: string;
 }
 
 const fetcher = async ({ queryKey }: QueryFunctionContext) => {
@@ -17,10 +17,15 @@ const fetcher = async ({ queryKey }: QueryFunctionContext) => {
   return (await axios.get(`${SERVER}/${key}/${id}`)).data;
 };
 
-function InformationBox({ id }: Props) {
-  const { data, isLoading } = useQuery<IPost>([apiKeys.items, id], fetcher, {
-    enabled: !!id?.length,
-  });
+function InformationBox({ selectedPostId }: Props) {
+  const { data, isLoading } = useQuery<IPost>(
+    [apiKeys.items, selectedPostId],
+    fetcher,
+    {
+      enabled: !!selectedPostId.length,
+      keepPreviousData: !!selectedPostId.length,
+    }
+  );
 
   return (
     <Wrapper>

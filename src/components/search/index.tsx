@@ -1,14 +1,12 @@
 import React, { useCallback, useState } from "react";
 import styled from "styled-components";
-import { useSearch } from "../../hooks/useSearch";
-import { ISearch } from "../../types/search";
 import InformationBox from "../information-box";
 import SearchBox from "../search-box";
 
 // type Props = ReturnType<typeof useSearch>;
 
 function Search() {
-  const [selectedPostId, setSelectedPostId] = useState<string>();
+  const [selectedPostId, setSelectedPostId] = useState<string>("");
 
   const selectPost = useCallback((id: string) => {
     setSelectedPostId(id);
@@ -16,8 +14,8 @@ function Search() {
 
   return (
     <Wrapper>
-      <SearchBox selectPost={selectPost} />
-      <InformationBox id={selectedPostId} />
+      <SearchBox selectPost={selectPost} selectedPostId={selectedPostId} />
+      <InformationBox selectedPostId={selectedPostId} />
     </Wrapper>
   );
 }

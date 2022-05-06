@@ -1,4 +1,10 @@
-import React, { KeyboardEvent, useCallback, useRef, useState } from "react";
+import React, {
+  KeyboardEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import styled from "styled-components";
 import { useDebounce } from "../../hooks/useDebounce";
 import { useInput } from "../../hooks/useInput";
@@ -9,10 +15,10 @@ import Autocompletes from "../list";
 
 interface Props {
   selectPost: (id: string) => void;
-  selectedPostId?: string;
+  selectedPostId: string;
 }
 
-function SearchBox({ selectPost }: Props) {
+function SearchBox({ selectPost, selectedPostId }: Props) {
   const [pIndex, setPIndex] = useState<number>(0);
 
   const searchInput = useInput();
@@ -58,6 +64,12 @@ function SearchBox({ selectPost }: Props) {
     setPIndex(index);
   }, []);
 
+  useEffect(() => {
+    if (!searchInput.value.length) {
+      selectPost("");
+    }
+  }, [searchInput.value]);
+
   return (
     <Wrapper>
       <InputBox
@@ -70,7 +82,8 @@ function SearchBox({ selectPost }: Props) {
         render={(item, index) => (
           <Item
             key={item.objectID}
-            selected={pIndex === index}
+            aria-selected={index === pIndex}
+            selected={selectedPostId === item.objectID}
             onMouseEnter={() => onMouseEnterPost(index)}
             onClick={() => selectPost(item.objectID)}
           >
@@ -79,7 +92,7 @@ function SearchBox({ selectPost }: Props) {
               backgroundColor: "transparent",
               color: "black",
             })}
-            <HiddenInput id={`${index}`} onKeyDown={onKeyDown} />
+            <HiddenInput onKeyDown={onKeyDown} />
           </Item>
         )}
       />
@@ -122,10 +135,6 @@ const Item = styled.label<{ selected: boolean }>`
   cursor: pointer;
 
   &[aria-selected="true"] {
-    background-color: rgb(100, 149, 237, 0.7);
-    color: #fff;
-  }
-  &:hover {
     background-color: rgb(100, 149, 237, 0.7);
     color: #fff;
   }
